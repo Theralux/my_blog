@@ -1,8 +1,7 @@
 import { defineSiteConfig } from 'valaxy'
 
 export default defineSiteConfig({
-  // 上线时替换为正式网址；这里只用于本地预览。
-  url: 'http://localhost:4859/',
+  url: 'https://civilighteterna.top/',
   lang: 'zh-CN',
   languages: ['zh-CN'],
   timezone: 'Asia/Shanghai',

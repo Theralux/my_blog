@@ -38,7 +38,8 @@ git commit -m "更新博客内容"
 git push
 ```
 
-目前推送只同步源码，服务器自动部署尚未配置。依赖、构建产物与 `.env` 文件由 `.gitignore` 排除。
+Vercel 接入仓库后，推送到 `main` 会自动构建并发布到 `https://civilighteterna.top/`。
+依赖、构建产物、Vercel 本地配置与 `.env` 文件由 `.gitignore` 排除。
 
 ## 构建与预览
 
@@ -47,6 +48,17 @@ pnpm.cmd build
 pnpm.cmd serve
 ```
 
-构建结果位于 `dist/`。当前为本地阶段；正式部署前需设置 `site.config.ts` 中的 `url`，以及子路径部署所需的 `vite.base`。
+构建结果位于 `dist/`。Vercel 的构建命令和输出目录记录在 `vercel.json` 中。
+
+## 线上部署
+
+- 平台：Vercel Hobby（个人、非商业用途）
+- 生产分支：`main`
+- 正式域名：`https://civilighteterna.top/`
+- 构建环境：Node.js 24.x、pnpm 10.x
+- 构建命令：`pnpm build`
+- 输出目录：`dist`
+
+首次上线需要在 Vercel 导入 GitHub 仓库并绑定域名；完成后，日常更新只需推送代码。
 
 官方文档：[Valaxy](https://valaxy.site/zh/guide/getting-started)

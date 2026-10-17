@@ -87,9 +87,10 @@ pnpm.cmd serve
 打开终端给出的地址，检查首页、文章、导航、图片和手机宽度下的显示。
 以后更新内容时，编辑源文件并重新构建，不直接修改 `dist/`。
 
-## 5. 准备上线时
+## 5. 发布与自动更新
 
-源码仓库为 [Theralux/my_blog](https://github.com/Theralux/my_blog)，目前尚未配置网站部署。
+源码仓库为 [Theralux/my_blog](https://github.com/Theralux/my_blog)，部署平台为 Vercel，
+正式地址为 `https://civilighteterna.top/`。
 修改文章、图片或配置后，先在本地预览，再同步源码：
 
 ```powershell
@@ -101,12 +102,12 @@ git push
 ```
 
 `git status` 可先检查本次修改；没有新修改时，无需再次提交。
-当前推送只保存源码。后续接入服务器自动部署后，推送会触发构建并更新网站。
-模板自带的 GitHub Pages 自动部署流程已移除，避免在选择服务器方案前触发部署。
+Vercel 接入仓库后，推送到 `main` 会自动执行生产构建并更新正式网站。
+其他分支可生成独立的预览部署，不会直接替换正式网站。
 
-确定正式访问地址后，在 `site.config.ts` 中填写实际站点 `url`。
-如果部署到 GitHub Pages 的项目子路径，例如 `/my-blog/`，还要在
-`valaxy.config.ts` 的 Vite 配置中设置对应的 `vite.base`，并重新检查图片和导航。
-根域名部署与项目子路径部署的配置不同，确定地址后再填写，不猜测你的域名。
+Vercel 的固定设置写在 `vercel.json`：使用 pnpm 安装依赖、执行 `pnpm build`，
+并发布 `dist` 目录。`site.config.ts` 中的正式站点 URL 已配置为根域名。
+首次上线仍需在 Vercel 控制台导入仓库、添加 `civilighteterna.top` 与
+`www.civilighteterna.top`，再按 Vercel 给出的值配置阿里云 DNS。
 
 官方参考：[快速开始](https://valaxy.site/zh/guide/getting-started) · [部署](https://valaxy.site/guide/deploy)

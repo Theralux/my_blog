@@ -15,6 +15,7 @@ temp/
 dist
 dist-ssr
 node_modules
+.vercel
 .idea/
 *.log
 
