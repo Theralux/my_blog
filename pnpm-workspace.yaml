@@ -1,0 +1,9 @@
+packages:
+  - .
+
+# 只允许构建工具和兼容层执行安装脚本。
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  rolldown: true
+  vue-demi: true

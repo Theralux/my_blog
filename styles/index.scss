@@ -1,0 +1,7 @@
+// you can custom css here
+
+// 图片按原比例填充圆形头像。
+.yun-author-avatar > img {
+  object-fit: cover;
+  object-position: center;
+}

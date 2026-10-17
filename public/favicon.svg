@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>luxの手札</title>
+  <rect width="64" height="64" rx="18" fill="#eaf4ff"/>
+  <path d="M23 17v30h23" fill="none" stroke="#0078e7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m44 12 2.5 7.5L54 22l-7.5 2.5L44 32l-2.5-7.5L34 22l7.5-2.5Z" fill="#6ea9ed"/>
+</svg>
