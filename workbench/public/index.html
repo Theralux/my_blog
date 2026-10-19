@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f7fb" />
+    <meta name="description" content="luxの手札的本地写作工作台" />
+    <title>写作工作台 · luxの手札</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand" aria-label="luxの手札写作工作台">
+          <div class="brand-mark" aria-hidden="true">L<span>✦</span></div>
+          <div>
+            <div class="brand-name">lux<span>の</span>手札</div>
+            <div class="brand-subtitle">写作工作台 <span class="brand-divider">/</span> 仅在本机运行</div>
+          </div>
+        </div>
+        <div class="top-actions">
+          <span id="saveState" class="save-state" role="status">正在连接本地服务…</span>
+          <button id="openSiteButton" class="button button-quiet" type="button" title="打开已保存内容的博客预览">预览博客 <span aria-hidden="true">↗</span></button>
+          <button id="publishButton" class="button button-primary" type="button" disabled>同步到线上 <span aria-hidden="true">→</span></button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="sidebar card" aria-label="文章列表">
+          <div class="sidebar-heading">
+            <div>
+              <p class="eyebrow">MY NOTES</p>
+              <h1>我的文章 <span id="postCount" class="count">0</span></h1>
+            </div>
+            <button id="newPostButton" class="icon-button new-button" type="button" title="新建文章" aria-label="新建文章">＋</button>
+          </div>
+          <label class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" placeholder="搜索标题或标签" autocomplete="off" aria-label="搜索文章" />
+          </label>
+          <div class="list-caption"><span>最近编辑</span><span id="listHint">按更新时间排序</span></div>
+          <div id="postList" class="post-list" aria-live="polite">
+            <p class="list-placeholder">正在读取文章…</p>
+          </div>
+          <div class="sidebar-help">
+            <div class="help-icon" aria-hidden="true">✧</div>
+            <p>灵感先存成草稿。写好后设为公开，再同步到线上。</p>
+          </div>
+        </aside>
+
+        <section class="editor card" aria-label="文章编辑器">
+          <div class="editor-header">
+            <div class="editor-heading">
+              <p class="eyebrow">EDITOR <span class="eyebrow-line"></span> <span id="editorContext">新的手札</span></p>
+              <h2 id="editorHeading">写下新的一页</h2>
+              <p id="editorSubtitle">这里的内容先保存在电脑里，准备好再同步到博客。</p>
+            </div>
+            <button id="saveButton" class="button button-outline" type="button">保存文章</button>
+          </div>
+
+          <form id="postForm" class="post-form" novalidate>
+            <div class="form-field title-field">
+              <label for="titleInput">标题 <span class="required">*</span></label>
+              <input id="titleInput" name="title" class="title-input" type="text" placeholder="给今天的手札起个名字" maxlength="140" required />
+            </div>
+
+            <div class="metadata-grid">
+              <div class="form-field">
+                <label for="slugInput">网址名称 <span class="required">*</span></label>
+                <input id="slugInput" name="slug" type="text" inputmode="url" spellcheck="false" placeholder="例如 first-note" required />
+                <small id="slugHelp">用于文章链接，建议只写小写英文字母、数字和短横线。</small>
+              </div>
+              <div class="form-field">
+                <label for="dateInput">发布日期</label>
+                <input id="dateInput" name="date" type="datetime-local" />
+              </div>
+              <div class="form-field">
+                <label for="categoriesInput">分类</label>
+                <input id="categoriesInput" name="categories" type="text" placeholder="例如 随笔" />
+              </div>
+              <div class="form-field">
+                <label for="tagsInput">标签</label>
+                <input id="tagsInput" name="tags" type="text" placeholder="用逗号分隔，如 生活, 阅读" />
+              </div>
+            </div>
+
+            <div class="form-field excerpt-field">
+              <label for="excerptInput">摘要 <span class="optional">可选</span></label>
+              <textarea id="excerptInput" name="excerpt" rows="2" placeholder="用一两句话介绍这篇文章"></textarea>
+            </div>
+
+            <div class="body-section">
+              <div class="body-heading">
+                <div>
+                  <label for="bodyInput">正文</label>
+                  <span class="body-note">支持 Markdown</span>
+                </div>
+                <div class="editor-tabs" role="tablist" aria-label="正文视图">
+                  <button id="writeTab" class="editor-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="writePane">编写</button>
+                  <button id="previewTab" class="editor-tab" type="button" role="tab" aria-selected="false" aria-controls="markdownPreview">预览</button>
+                </div>
+              </div>
+              <div id="writePane" class="write-pane" role="tabpanel" aria-labelledby="writeTab">
+                <div class="editor-tools" aria-label="Markdown 工具">
+                  <button type="button" data-insert="heading" title="插入二级标题">H2</button>
+                  <button type="button" data-insert="bold" title="加粗选中文字"><strong>B</strong></button>
+                  <button type="button" data-insert="link" title="插入链接">链接</button>
+                  <span class="tool-spacer"></span>
+                  <button id="imageButton" type="button" title="上传图片并插入正文"><span aria-hidden="true">▧</span> 插入图片</button>
+                </div>
+                <textarea id="bodyInput" name="body" class="body-input" rows="15" spellcheck="true" placeholder="从这里开始写吧…\n\n## 一个小标题\n\n今天想记下的事情。"></textarea>
+              </div>
+              <div id="markdownPreview" class="markdown-preview" role="tabpanel" aria-labelledby="previewTab" hidden>
+                <div class="preview-placeholder">保存后也可以用右上角的“预览博客”查看真实页面。</div>
+              </div>
+            </div>
+
+            <div class="editor-footer">
+              <label class="draft-control" for="draftInput">
+                <input id="draftInput" name="draft" type="checkbox" checked />
+                <span class="switch" aria-hidden="true"></span>
+                <span class="draft-copy"><strong id="draftLabel">保存为草稿</strong><small id="draftDescription">草稿不会显示在正式博客</small></span>
+              </label>
+              <div class="footer-actions">
+                <span id="wordCount" class="word-count">0 字</span>
+                <button id="footerSaveButton" class="button button-primary" type="button">保存文章 <span aria-hidden="true">→</span></button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <aside class="status-panel card" aria-label="同步状态">
+          <div class="status-top">
+            <p class="eyebrow">PUBLISHING</p>
+            <h2>上线情况</h2>
+            <p>保存写作内容后，点击“同步到线上”，Vercel 会从 GitHub 自动部署。</p>
+          </div>
+          <div class="status-card">
+            <div class="status-light" id="publishLight" aria-hidden="true"></div>
+            <div><strong id="publishState">读取中…</strong><small id="publishDetail">正在检查本地改动</small></div>
+          </div>
+          <div class="status-block">
+            <div class="status-row"><span>当前分支</span><strong id="branchValue">—</strong></div>
+            <div class="status-row"><span>待同步文件</span><strong id="changeCount">—</strong></div>
+          </div>
+          <div class="changes-heading"><span>改动文件</span><button id="refreshButton" type="button" title="刷新状态">刷新 ↻</button></div>
+          <ul id="changedFiles" class="changed-files"><li class="muted">正在读取…</li></ul>
+          <details class="publish-log-details">
+            <summary>同步记录 <span aria-hidden="true">⌄</span></summary>
+            <pre id="publishLog" class="publish-log">还没有同步记录。</pre>
+          </details>
+          <div class="status-tip"><span aria-hidden="true">✦</span> 每次同步完成后，网站通常还需要一点时间构建更新。</div>
+        </aside>
+      </main>
+    </div>
+
+    <dialog id="publishDialog" class="publish-dialog" aria-labelledby="publishDialogTitle">
+      <form method="dialog" id="publishForm">
+        <div class="dialog-icon" aria-hidden="true">↗</div>
+        <h2 id="publishDialogTitle">同步到线上</h2>
+        <p id="publishDialogDescription">将本地改动推送到 GitHub，然后由 Vercel 更新博客。</p>
+        <p class="dialog-warning">草稿不会显示在正式博客，但同步后源码仍会出现在公开的 GitHub 仓库。</p>
+        <div id="publishDialogFiles" class="dialog-files"></div>
+        <label class="form-field" for="commitMessageInput">这次更新的说明</label>
+        <input id="commitMessageInput" type="text" maxlength="120" value="更新博客内容" />
+        <div class="dialog-actions">
+          <button id="cancelPublishButton" class="button button-quiet" type="button">再检查一下</button>
+          <button id="confirmPublishButton" class="button button-primary" type="submit">确认同步 <span aria-hidden="true">→</span></button>
+        </div>
+      </form>
+    </dialog>
+
+    <input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" hidden />
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
